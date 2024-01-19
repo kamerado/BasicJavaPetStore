@@ -11,59 +11,138 @@ public class PetStore {
 
     // Generic method that returns free space for either Classes
     public static <A> void usedSpaces(A[] aList, String type) {
-        String var = "No spaces used";
+        String[] var = new String[150];
+        var[0] = "No space used";
         if (type == "dog") {
-            for (A i : aList) { // loops through list if type dog, and grabs location.
-                if (i != null) {
-                    var = "";
-                    var += ((Dog) i).getDogSpaceNumber() + ", ";
-                }
-            }
-            System.out.println("Used spaces:\n(" + var + ")"); // Displays used spaces to screen.
-        } else if (type == "cat") { // loops through list if type cat, and grabs location.
+            int c = 0;
             for (A i : aList) {
                 if (i != null) {
-                    var = "";
-                    var += ((Cat) i).getCatSpaceNumber() + ", ";
+                    if (c == 0) {
+                        var[c] = Integer.toString(((Dog) i).getDogSpaceNumber());
+                        // var.append(());
+                        c++;
+                    } else {
+                        var[c] = ", ";
+                        c++;
+                        String tmp = Integer.toString(((Dog) i).getDogSpaceNumber());
+                        var[c] = tmp;
+                        c++;
+                    }
                 }
-            } 
-            System.out.println("Used spaces:\n(" + var + ")"); // Displays used spaces to screen.
+            }
+        } else if (type == "cat") { // loops through list if type cat, and grabs location.
+            int c = 0;
+            for (A i : aList) {
+                if (i != null) {
+                    if (c == 0) {
+                        var[c] = Integer.toString(((Cat) i).getCatSpaceNumber());
+                        c++;
+                    } else {
+                        var[c] = ", ";
+                        c++;
+                        String tmp = Integer.toString(((Cat) i).getCatSpaceNumber());
+                        var[c] = tmp;
+                        c++;
+                    }
+                }
+            }
         } else { System.out.println("we have problems"); }
+        String c = String.join("", var);
+        System.out.println("\nUsed spaces:\n(" + c.replace("null", "") + ")"); // Displays used spaces to screen.
+    }
+
+    public static int getInputInt(Scanner scnr) {
+        System.out.print("Enter whole number: ");
+        String input = scnr.next();
+
+        //check the input validity
+        if(!input.matches("^[0-9]+$")){
+
+            //if the input is incorrect tell the user and get the new input
+            clearScreen();
+            System.out.println("Invalid Input.");
+
+            //simply return this method if the input is incorrect.
+            return getInputInt(scnr);
+        }
+
+        //return the input if it is correct
+        return Integer.valueOf(input);
+    }
+
+    public static String getInputString(Scanner scnr) {
+        System.out.print("Enter string: ");
+        String input = scnr.next();
+
+        //check the input validity
+        if(!input.matches("^([A-Za-z])+$")) {
+
+            //if the input is incorrect tell the user and get the new input
+            clearScreen();
+            System.out.println("Invalid Input. no numbers or symbols allowed.");
+
+            //simply return this method if the input is incorrect.
+            return getInputString(scnr);
+        }
+
+        //return the input if it is correct
+        return input;
     }
 
     public static int[] checkIn(Scanner scnr, int dSpace, int cSpace, Dog[] dogList, Cat[] catList) {
         int[] var = new int[2];
 
-        clearScreen();
+        
         if (dSpace > 0 && cSpace > 0) {
-            System.out.println("Enter pet type: ");
-            String type = scnr.next();
+            String type = null;
+            String name = null;
+            int age = -1;
+            int stay = -1;
+            int dogWeight = -1;
 
             clearScreen();
-            System.out.println("Enter pet name: ");
-            String name = scnr.next();
+            System.out.println("Enter pet type.");
+            type = getInputString(scnr);
 
             clearScreen();
-            System.out.println("Enter pet age: ");
-            int age = scnr.nextInt();
-            clearScreen();
-            System.out.println("Enter pet stay: ");
-            int stay = scnr.nextInt();
-            clearScreen();
+            System.out.println("Enter pet name.");
+            name = getInputString(scnr);
 
+            clearScreen();
+            System.out.println("Enter pet age.");
+            age = getInputInt(scnr);
+
+            clearScreen();
+            System.out.println("Enter pet stay.");
+            stay = getInputInt(scnr);
+
+            clearScreen();
             switch (type.toLowerCase()) {
                 case "dog":
-                    usedSpaces(dogList, "dog");
-                    System.out.println("Enter dog location: (1-30)");
-                    int dogSpace = scnr.nextInt();
+                    
+                    
+                    int dogSpace = 0;
+                    String m = null;
+                    while (m == null) {
+                        dogSpace = -1;
+                        usedSpaces(dogList, "dog");
+                        System.out.println("\nEnter dog location: (1-30)");
+                        dogSpace = getInputInt(scnr);
 
+                        for (Dog z : dogList) {
+                            if (z != null && ((Dog)z).getDogSpaceNumber() == dogSpace) {
+                                System.out.println("Space already in use.");
+                                break;
+                            } else { m = ""; break; }
+                        }
+                    }
                     clearScreen();
-                    System.out.println("Enter Dog weight: ");
-                    int dogWeight = scnr.nextInt();
+                    System.out.println("Enter Dog weight.");
+                    dogWeight = getInputInt(scnr);
 
                     clearScreen();
                     System.out.println("Optional grooming? (y/n): ");
-                    String grooming = scnr.next();
+                    String grooming = getInputString(scnr);
                     boolean groom = false;
                     if (grooming.charAt(0) == 'y') {
                         groom = true;
@@ -77,9 +156,21 @@ public class PetStore {
                     var[1] = cSpace;
                     break;
                 case "cat":
-                    System.out.println("Enter Cat location: ");
-                    usedSpaces(catList, "cat");
-                    int catSpace = scnr.nextInt();
+                    int catSpace = 0;
+                    m = null;
+                    while (m == null) {
+                        catSpace = -1;
+                        usedSpaces(catList, "cat");
+                        System.out.println("\nEnter cat location: (1-12)");
+                        catSpace = getInputInt(scnr);
+                        for (Cat z : catList) {
+                            if (z != null && ((Cat)z).getCatSpaceNumber() == catSpace) {
+                                clearScreen();
+                                System.out.println("Space already in use.");
+                                break;
+                            } else { m = "yes"; break; }
+                        }
+                    }
                     Cat tmpCat = new Cat(type, name, age, stay, catSpace);
                     catList[catSpace-1] = tmpCat;
                     cSpace -= 1;
@@ -173,7 +264,8 @@ public class PetStore {
         return;
     }
 
-        public static void promptEnterKey2(Scanner scnr) {
+    // nextLine behaves funny, using twice to acheive desired functionality.
+    public static void promptEnterKey2(Scanner scnr) {
         System.out.println("Press enter to continue.");
         String var = scnr.nextLine();
         String var2 = scnr.nextLine();
