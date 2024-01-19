@@ -347,7 +347,7 @@ public class PetStore {
                 }
                 break;
             default:
-                System.out.println("Bad input near line 195.");
+                System.out.println("Bad input near line 350.");
                 break;
         }
         int selection = getInputInt(scnr)-1;
@@ -467,7 +467,7 @@ public class PetStore {
                     }
                 }
             default:
-                System.out.println("Bad input near line 216.");
+                System.out.println("Bad input near line 470.");
         }
     }
 
