@@ -19,7 +19,6 @@ public class PetStore {
                 if (i != null) {
                     if (c == 0) {
                         var[c] = Integer.toString(((Dog) i).getDogSpaceNumber());
-                        // var.append(());
                         c++;
                     } else {
                         var[c] = ", ";
